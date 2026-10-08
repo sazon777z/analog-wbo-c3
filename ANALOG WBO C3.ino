@@ -81,13 +81,9 @@ unsigned long lastBleSendTime = 0;
 
 // Серверные обратные вызовы для управления соединением BLE
 class ServerCallbacks : public BLEServerCallbacks {
-  void onConnect(BLEServer* server, esp_ble_gatts_cb_param_t* param) {
+  void onConnect(BLEServer* server) {
     deviceConnected = true;
     Serial.println(F("[BLE] Клиент подключен!"));
-
-    // Запрашиваем минимальный интервал подключения для сверхнизкой задержки:
-    // min_interval = 6 (7.5ms), max_interval = 12 (15ms), latency = 0, timeout = 100 (1000ms)
-    server->updateConnParams(param->connect.remote_bda, 6, 12, 0, 100);
   }
 
   void onDisconnect(BLEServer* server) {
