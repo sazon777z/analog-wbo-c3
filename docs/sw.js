@@ -1,5 +1,5 @@
 // Версия кэша - инкрементируется при выпуске обновлений
-const CACHE_NAME = 'wbo-afr-v1.0.4';
+const CACHE_NAME = 'wbo-afr-v1.0.5';
 
 const ASSETS_TO_CACHE = [
   './',

@@ -67,18 +67,12 @@
       gap: 10px;
     }
 
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #00f0ff, #0066ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 14px;
-      color: #000;
+    .brand-logo-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      object-fit: cover;
     }
 
     .brand-title {
@@ -643,7 +637,7 @@
 
   <header>
     <div class="brand">
-      <div class="brand-logo">λ</div>
+      <img src="icons/icon-192.png" alt="WBO" class="brand-logo-img">
       <div>
         <div class="brand-title">WBO GAUGE</div>
         <div class="brand-subtitle">ESP32-C3 • LSU 4.9 BLE</div>
