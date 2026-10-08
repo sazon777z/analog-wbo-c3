@@ -767,13 +767,21 @@
     .modal-backdrop {
       display: none;
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 12px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
     .modal-card {
@@ -781,14 +789,17 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 20px;
       width: 100%;
-      max-width: 440px;
-      padding: 20px;
+      max-width: 400px;
+      box-sizing: border-box;
+      padding: 18px 14px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-height: 90vh;
+      gap: 12px;
+      max-height: 92vh;
       overflow-y: auto;
+      overflow-x: hidden;
+      margin: auto;
     }
 
     .modal-header {
@@ -796,18 +807,21 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--card-border);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .modal-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       color: var(--accent-cyan);
       display: flex;
       align-items: center;
       gap: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .btn-close {
@@ -823,6 +837,7 @@
       font-size: 16px;
       cursor: pointer;
       transition: background 0.2s;
+      flex-shrink: 0;
     }
 
     .btn-close:hover {
@@ -833,26 +848,42 @@
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .form-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .form-select, .form-input {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13.5px;
       outline: none;
       transition: border-color 0.2s;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-select {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .form-select:focus, .form-input:focus {
@@ -866,26 +897,34 @@
 
     .form-grid-2 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .modal-preview {
       background: rgba(0, 240, 255, 0.06);
       border: 1px solid rgba(0, 240, 255, 0.2);
       border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 12px;
+      padding: 9px 12px;
+      font-size: 11.5px;
       color: var(--text-main);
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .modal-actions {
       display: flex;
-      gap: 10px;
-      margin-top: 6px;
+      gap: 8px;
+      margin-top: 4px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .btn-save {
@@ -893,14 +932,16 @@
       background: linear-gradient(135deg, #00f0ff, #0077ff);
       color: #000;
       border: none;
-      padding: 12px;
+      padding: 11px;
       border-radius: 12px;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12.5px;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: transform 0.1s ease;
+      white-space: nowrap;
+      box-sizing: border-box;
     }
 
     .btn-save:active {
@@ -912,12 +953,44 @@
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
       border: 1px solid var(--card-border);
-      padding: 12px;
+      padding: 11px;
       border-radius: 12px;
       font-weight: 700;
       font-size: 12px;
       cursor: pointer;
       text-transform: uppercase;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 420px) {
+      .modal-backdrop {
+        padding: 8px;
+      }
+      .modal-card {
+        padding: 14px 10px;
+        border-radius: 16px;
+        gap: 10px;
+        max-height: 94vh;
+      }
+      .form-grid-2 {
+        gap: 6px;
+      }
+      .form-label {
+        font-size: 9.5px;
+      }
+      .form-input, .form-select {
+        padding: 8px 8px;
+        font-size: 13px;
+      }
+      .modal-preview {
+        font-size: 11px;
+        padding: 8px 10px;
+      }
+      .btn-save, .btn-reset {
+        padding: 10px;
+        font-size: 11px;
+      }
     }
 
     /* Адаптив для маленьких экранов */
@@ -971,10 +1044,10 @@
       <div class="form-group">
         <label class="form-label">Готовый профиль контроллера</label>
         <select class="form-select" id="selPreset">
-          <option value="standard">Стандарт: 0–5 В = 10–20 AFR (AEM, Spartan 2/3)</option>
-          <option value="innovate">Innovate: 0–5 В = 7.35–22.39 AFR (LC-2, MTX-L)</option>
-          <option value="aem_x">AEM X-Series: 0.5–4.5 В = 8.5–18.0 AFR</option>
-          <option value="custom">Пользовательский (Ручной ввод)</option>
+          <option value="standard">Стандарт: 0–5 В = 10–20 AFR (AEM)</option>
+          <option value="innovate">Innovate: 0–5 В = 7.35–22.39 AFR</option>
+          <option value="aem_x">AEM X-Series: 0.5–4.5 В = 8.5–18.0</option>
+          <option value="custom">Пользовательский профиль</option>
         </select>
       </div>
 
@@ -1016,10 +1089,10 @@
       <div class="form-group">
         <label class="form-label">Тип топлива (Стехиометрия)</label>
         <select class="form-select" id="selFuel">
-          <option value="14.70">Бензин (14.7 AFR = λ 1.00)</option>
-          <option value="9.76">Спирт / E85 (9.76 AFR = λ 1.00)</option>
-          <option value="15.50">Газ / Пропан LPG (15.5 AFR = λ 1.00)</option>
-          <option value="14.50">Дизель (14.5 AFR = λ 1.00)</option>
+          <option value="14.70">Бензин (14.7 AFR = λ 1.0)</option>
+          <option value="9.76">Спирт / E85 (9.76 AFR = λ 1.0)</option>
+          <option value="15.50">Газ LPG (15.5 AFR = λ 1.0)</option>
+          <option value="14.50">Дизель (14.5 AFR = λ 1.0)</option>
         </select>
       </div>
 
@@ -1588,17 +1661,21 @@
       prevLambda.textContent = lam.toFixed(2);
     }
 
-    btnSettings.addEventListener('click', () => {
+    function openModal() {
       populateModalFields();
       modalCalib.style.display = 'flex';
-    });
+      document.body.style.overflow = 'hidden';
+    }
 
-    btnCloseModal.addEventListener('click', () => {
+    function closeModal() {
       modalCalib.style.display = 'none';
-    });
+      document.body.style.overflow = '';
+    }
 
+    btnSettings.addEventListener('click', openModal);
+    btnCloseModal.addEventListener('click', closeModal);
     modalCalib.addEventListener('click', (e) => {
-      if (e.target === modalCalib) modalCalib.style.display = 'none';
+      if (e.target === modalCalib) closeModal();
     });
 
     selPreset.addEventListener('change', () => {
@@ -1693,7 +1770,7 @@
       };
       localStorage.setItem('wbo_calib', JSON.stringify(userCalib));
       updateScaleLabels();
-      modalCalib.style.display = 'none';
+      closeModal();
     });
 
     btnResetCalib.addEventListener('click', () => {
