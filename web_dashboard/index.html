@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WBO AFR Gauge — ESP32-C3</title>
+  <style>
+    :root {
+      --bg-dark: #0a0c10;
+      --card-bg: rgba(18, 22, 31, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #00f0ff;
+      --accent-green: #00ff66;
+      --accent-amber: #ffaa00;
+      --accent-red: #ff3344;
+      --text-main: #f0f4fc;
+      --text-muted: #7e8b9b;
+      --glow-rich: 0 0 25px rgba(255, 170, 0, 0.4);
+      --glow-stoich: 0 0 25px rgba(0, 255, 102, 0.4);
+      --glow-lean: 0 0 25px rgba(255, 51, 68, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(0, 240, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 50% 90%, rgba(255, 51, 68, 0.05) 0%, transparent 60%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    header {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #00f0ff, #0066ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+      color: #000;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Главный контейнер приборной панели */
+    .dashboard-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Карточка циферблата */
+    .gauge-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 20px 16px 14px 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gauge-wrapper {
+      position: relative;
+      width: 290px;
+      height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    svg.gauge-svg {
+      width: 290px;
+      height: 250px;
+      transform: rotate(0deg);
+    }
+
+    .gauge-track {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.06);
+      stroke-width: 16;
+      stroke-linecap: round;
+    }
+
+    .gauge-progress {
+      fill: none;
+      stroke-width: 16;
+      stroke-linecap: round;
+      stroke-dasharray: 565;
+      stroke-dashoffset: 565;
+      transition: stroke-dashoffset 0.08s ease-out, stroke 0.2s ease;
+      filter: drop-shadow(0 0 10px currentColor);
+    }
+
+    .gauge-ticks text {
+      fill: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .gauge-center-content {
+      position: absolute;
+      top: 105px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .afr-value {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -1.5px;
+      font-variant-numeric: tabular-nums;
+      transition: color 0.15s ease, text-shadow 0.15s ease;
+      color: var(--text-main);
+    }
+
+    .afr-unit {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      transition: all 0.2s ease;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    /* Дополнительные телеметрические плашки */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .telemetry-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      backdrop-filter: blur(10px);
+    }
+
+    .tile-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .tile-value {
+      font-size: 24px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-main);
+    }
+
+    .tile-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Осциллограф / График реального времени */
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .chart-info {
+      font-size: 11px;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    canvas#historyChart {
+      width: 100%;
+      height: 90px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Кнопки управления и подключения */
+    .controls-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-connect {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #00f0ff, #0066ff);
+      color: #000;
+      box-shadow: 0 8px 25px rgba(0, 150, 255, 0.35);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-connect:active {
+      transform: scale(0.98);
+    }
+
+    .btn-connect.connected {
+      background: linear-gradient(135deg, #ff4444, #aa1122);
+      color: #fff;
+      box-shadow: 0 8px 25px rgba(255, 50, 50, 0.3);
+    }
+
+    .connection-status {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #888;
+    }
+
+    .status-indicator.active {
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 0.6; transform: scale(0.95); }
+    }
+
+    /* Цветовые стили для разных смесей */
+    .color-rich {
+      color: var(--accent-amber) !important;
+      text-shadow: var(--glow-rich);
+    }
+    .color-stoich {
+      color: var(--accent-green) !important;
+      text-shadow: var(--glow-stoich);
+    }
+    .color-lean {
+      color: var(--accent-red) !important;
+      text-shadow: var(--glow-lean);
+    }
+
+    /* Адаптив для маленьких экранов */
+    @media (max-height: 700px) {
+      .gauge-wrapper {
+        width: 260px;
+        height: 220px;
+      }
+      svg.gauge-svg {
+        width: 260px;
+        height: 220px;
+      }
+      .gauge-center-content {
+        top: 90px;
+      }
+      .afr-value {
+        font-size: 54px;
+      }
+      canvas#historyChart {
+        height: 75px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">λ</div>
+      <div>
+        <div class="brand-title">WBO GAUGE</div>
+        <div class="brand-subtitle">ESP32-C3 • LSU 4.9 BLE</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btnAudio" title="Звук предупреждения">🔔</button>
+      <button class="icon-btn" id="btnFullscreen" title="На весь экран">⛶</button>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <!-- Главная круговая шкала -->
+    <div class="gauge-card">
+      <div class="gauge-wrapper">
+        <svg class="gauge-svg" viewBox="0 0 300 260">
+          <defs>
+            <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff9900" />    <!-- Rich (10.0) -->
+              <stop offset="35%" stop-color="#ffcc00" />   <!-- Power Rich (12.5) -->
+              <stop offset="50%" stop-color="#00ff66" />   <!-- Stoich (14.7) -->
+              <stop offset="75%" stop-color="#00ddff" />   <!-- Lean (16.0) -->
+              <stop offset="100%" stop-color="#ff2244" />  <!-- Danger Lean (20.0) -->
+            </linearGradient>
+          </defs>
+          <!-- Фоновая дуга (угол от 140° до 400° -> 260 градусов) -->
+          <path class="gauge-track" d="M 55 210 A 110 110 0 1 1 245 210" />
+          <!-- Активная заполняющая дуга -->
+          <path id="gaugePath" class="gauge-progress" stroke="url(#gaugeGradient)" d="M 55 210 A 110 110 0 1 1 245 210" />
+          
+          <!-- Метки шкалы -->
+          <g class="gauge-ticks">
+            <text x="45" y="222">10</text>
+            <text x="32" y="145">12</text>
+            <text x="65" y="75">14</text>
+            <text x="150" y="44">14.7</text>
+            <text x="235" y="75">16</text>
+            <text x="268" y="145">18</text>
+            <text x="255" y="222">20</text>
+          </g>
+        </svg>
+
+        <div class="gauge-center-content">
+          <div class="afr-value" id="valAfr">--.-</div>
+          <div class="afr-unit">AFR (A/F)</div>
+          <div class="status-badge" id="badgeState">
+            <span class="status-dot" id="badgeDot"></span>
+            <span id="badgeText">ОЖИДАНИЕ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Информационные плитки -->
+    <div class="telemetry-grid">
+      <div class="telemetry-tile">
+        <div class="tile-label">Коэффициент Лямбда (λ)</div>
+        <div class="tile-value" id="valLambda">-.--</div>
+        <div class="tile-sub" id="subLambda">1.00 = Стехиометрия</div>
+      </div>
+      <div class="telemetry-tile">
+        <div class="tile-label">Входное напряжение</div>
+        <div class="tile-value" id="valVolts">-.-- В</div>
+        <div class="tile-sub" id="subVolts">0.0 - 5.0 В (LSU 4.9)</div>
+      </div>
+    </div>
+
+    <!-- График во времени -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <span class="chart-title">История изменения (Real-time)</span>
+        <span class="chart-info" id="chartRate">-- Гц</span>
+      </div>
+      <canvas id="historyChart" width="460" height="90"></canvas>
+    </div>
+
+    <!-- Управление подключением -->
+    <div class="controls-container">
+      <button class="btn-connect" id="btnConnect">
+        <span>⚡ ПОДКЛЮЧИТЬ ДАТЧИК</span>
+      </button>
+      <div class="connection-status">
+        <span class="status-indicator" id="statusLed"></span>
+        <span id="statusLabel">Устройство не подключено</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Конфигурация BLE сервиса Nordic UART
+    const BLE_SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    const BLE_TX_CHAR_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+    // Элементы интерфейса
+    const btnConnect = document.getElementById('btnConnect');
+    const statusLed = document.getElementById('statusLed');
+    const statusLabel = document.getElementById('statusLabel');
+    const valAfr = document.getElementById('valAfr');
+    const valLambda = document.getElementById('valLambda');
+    const valVolts = document.getElementById('valVolts');
+    const gaugePath = document.getElementById('gaugePath');
+    const badgeState = document.getElementById('badgeState');
+    const badgeDot = document.getElementById('badgeDot');
+    const badgeText = document.getElementById('badgeText');
+    const chartRate = document.getElementById('chartRate');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const btnAudio = document.getElementById('btnAudio');
+    const canvas = document.getElementById('historyChart');
+    const ctx = canvas.getContext('2d');
+
+    // Переменные состояния
+    let bluetoothDevice = null;
+    let txCharacteristic = null;
+    let wakeLock = null;
+    let audioAlertEnabled = true;
+    let lastPacketTime = performance.now();
+    let packetCount = 0;
+    let fpsTimer = performance.now();
+
+    // Буфер истории для осциллографа (150 точек)
+    const MAX_POINTS = 140;
+    const historyData = new Array(MAX_POINTS).fill(14.7);
+
+    // Длина окружности дуги в SVG (радиус 110, дуга ~260 градусов)
+    // Длина пути L ~= 500 px
+    const PATH_TOTAL_LENGTH = gaugePath.getTotalLength();
+    gaugePath.style.strokeDasharray = PATH_TOTAL_LENGTH;
+    gaugePath.style.strokeDashoffset = PATH_TOTAL_LENGTH;
+
+    // Звуковой контекст для предупреждений (Web Audio API без внешних файлов)
+    let audioCtx = null;
+    function playBeep(freq = 880, duration = 0.1) {
+      if (!audioAlertEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Запрос постоянного включения экрана (Wake Lock API)
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          console.log('[WakeLock] Экран удерживается активным');
+        }
+      } catch (err) {
+        console.log('[WakeLock] Ошибка:', err);
+      }
+    }
+
+    // Полноэкранный режим
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    btnAudio.addEventListener('click', () => {
+      audioAlertEnabled = !audioAlertEnabled;
+      btnAudio.textContent = audioAlertEnabled ? '🔔' : '🔕';
+      btnAudio.style.opacity = audioAlertEnabled ? '1' : '0.5';
+    });
+
+    // Обновление физических показаний на экране
+    let lastAlertTime = 0;
+    function updateDisplay(afr, volts, lambda) {
+      // 1. Цифровые значения
+      valAfr.textContent = afr.toFixed(2);
+      valLambda.textContent = lambda.toFixed(2);
+      valVolts.textContent = volts.toFixed(2) + ' В';
+
+      // 2. Движение дуги спидометра (шкала от 10.0 до 20.0 AFR)
+      const clampedAfr = Math.min(Math.max(afr, 10.0), 20.0);
+      const ratio = (clampedAfr - 10.0) / (20.0 - 10.0);
+      const offset = PATH_TOTAL_LENGTH * (1 - ratio);
+      gaugePath.style.strokeDashoffset = offset;
+
+      // 3. Зоны смеси и цветовая дифференциация
+      valAfr.classList.remove('color-rich', 'color-stoich', 'color-lean');
+      if (afr < 12.5) {
+        // Богатая смесь (Rich)
+        valAfr.classList.add('color-rich');
+        badgeText.textContent = "БОГАТАЯ (RICH)";
+        badgeDot.style.background = "var(--accent-amber)";
+        badgeState.style.borderColor = "var(--accent-amber)";
+      } else if (afr >= 12.5 && afr <= 13.5) {
+        // Мощностная смесь (Best Power)
+        valAfr.classList.add('color-stoich');
+        badgeText.textContent = "МОЩНОСТЬ (POWER)";
+        badgeDot.style.background = "#77ff00";
+        badgeState.style.borderColor = "#77ff00";
+      } else if (afr > 13.5 && afr <= 15.2) {
+        // Стехиометрия / Круиз
+        valAfr.classList.add('color-stoich');
+        badgeText.textContent = "СТЕХИОМЕТРИЯ (14.7)";
+        badgeDot.style.background = "var(--accent-green)";
+        badgeState.style.borderColor = "var(--accent-green)";
+      } else {
+        // Бедная смесь (Lean)
+        valAfr.classList.add('color-lean');
+        badgeText.textContent = (afr > 16.5) ? "ОПАСНО: БЕДНАЯ!" : "БЕДНАЯ (LEAN)";
+        badgeDot.style.background = "var(--accent-red)";
+        badgeState.style.borderColor = "var(--accent-red)";
+
+        // Звуковое предупреждение при опасном забеднении
+        const now = performance.now();
+        if (afr > 16.5 && now - lastAlertTime > 1500) {
+          playBeep(980, 0.15);
+          lastAlertTime = now;
+        }
+      }
+
+      // 4. Добавление точки в буфер графика
+      historyData.push(afr);
+      historyData.shift();
+
+      // 5. Расчет частоты передачи (Гц)
+      packetCount++;
+      const now = performance.now();
+      if (now - fpsTimer >= 1000) {
+        chartRate.textContent = `${packetCount} Гц`;
+        packetCount = 0;
+        fpsTimer = now;
+      }
+    }
+
+    // Отрисовка графика в реальном времени (Canvas)
+    function renderChart() {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Сетка и линия 14.7
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineWidth = 1;
+
+      // Горизонтальная линия стехиометрии 14.7
+      // Диапазон шкалы: 10.0 (низ) до 20.0 (верх)
+      const stoichY = h - ((14.7 - 10.0) / 10.0) * h;
+      ctx.beginPath();
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = "rgba(0, 255, 102, 0.35)";
+      ctx.moveTo(0, stoichY);
+      ctx.lineTo(w, stoichY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Подпись 14.7
+      ctx.fillStyle = "rgba(0, 255, 102, 0.6)";
+      ctx.font = "9px sans-serif";
+      ctx.fillText("14.7", 4, stoichY - 3);
+
+      // Рисование линии AFR
+      ctx.beginPath();
+      ctx.lineWidth = 2.5;
+      const step = w / (MAX_POINTS - 1);
+
+      for (let i = 0; i < MAX_POINTS; i++) {
+        const val = Math.min(Math.max(historyData[i], 10.0), 20.0);
+        const y = h - ((val - 10.0) / 10.0) * (h - 10) - 5;
+        const x = i * step;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      // Градиент свечения линии
+      ctx.strokeStyle = "#00f0ff";
+      ctx.shadowColor = "#00f0ff";
+      ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(renderChart);
+    }
+    renderChart();
+
+    // Парсинг входящего потока данных от Nordic UART Characteristic
+    let incomingBuffer = "";
+    function handleBleNotification(event) {
+      const value = event.target.value;
+      const decoder = new TextDecoder('utf-8');
+      incomingBuffer += decoder.decode(value);
+
+      let lineEndIndex;
+      while ((lineEndIndex = incomingBuffer.indexOf('\n')) >= 0) {
+        const line = incomingBuffer.substring(0, lineEndIndex).trim();
+        incomingBuffer = incomingBuffer.substring(lineEndIndex + 1);
+
+        if (line.length > 0) {
+          // Формат: "14.72,2.36,1.00"
+          const parts = line.split(',');
+          if (parts.length >= 3) {
+            const afr = parseFloat(parts[0]);
+            const volts = parseFloat(parts[1]);
+            const lambda = parseFloat(parts[2]);
+            if (!isNaN(afr) && !isNaN(volts) && !isNaN(lambda)) {
+              updateDisplay(afr, volts, lambda);
+            }
+          }
+        }
+      }
+    }
+
+    // Подключение к устройству через Web Bluetooth API
+    async function connectBluetooth() {
+      if (!navigator.bluetooth) {
+        alert("Ваш браузер не поддерживает Web Bluetooth API.\n\n• На Android: используйте Google Chrome\n• На iPhone/iPad: установите бесплатный браузер Bluefy с поддержкой Web BLE.");
+        return;
+      }
+
+      try {
+        statusLabel.textContent = "Поиск прибора WBO_AFR_C3...";
+        bluetoothDevice = await navigator.bluetooth.requestDevice({
+          filters: [{ namePrefix: 'WBO' }],
+          optionalServices: [BLE_SERVICE_UUID]
+        });
+
+        bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
+
+        statusLabel.textContent = "Подключение к GATT серверу...";
+        const server = await bluetoothDevice.gatt.connect();
+
+        statusLabel.textContent = "Инициализация службы NUS...";
+        const service = await server.getPrimaryService(BLE_SERVICE_UUID);
+
+        statusLabel.textContent = "Подписка на поток телеметрии...";
+        txCharacteristic = await service.getCharacteristic(BLE_TX_CHAR_UUID);
+        await txCharacteristic.startNotifications();
+        txCharacteristic.addEventListener('characteristicvaluechanged', handleBleNotification);
+
+        // Успешное подключение
+        statusLed.classList.add('active');
+        statusLabel.textContent = `Подключено: ${bluetoothDevice.name || 'WBO'}`;
+        btnConnect.classList.add('connected');
+        btnConnect.querySelector('span').textContent = "✕ ОТКЛЮЧИТЬ";
+
+        requestWakeLock();
+      } catch (error) {
+        console.error("Ошибка BLE:", error);
+        statusLabel.textContent = "Ошибка подключения / отменено";
+        statusLed.classList.remove('active');
+      }
+    }
+
+    function disconnectBluetooth() {
+      if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+        bluetoothDevice.gatt.disconnect();
+      }
+      onDisconnected();
+    }
+
+    function onDisconnected() {
+      statusLed.classList.remove('active');
+      statusLabel.textContent = "Устройство отключено";
+      btnConnect.classList.remove('connected');
+      btnConnect.querySelector('span').textContent = "⚡ ПОДКЛЮЧИТЬ ДАТЧИК";
+      valAfr.textContent = "--.-";
+      valLambda.textContent = "-.--";
+      valVolts.textContent = "-.-- В";
+      gaugePath.style.strokeDashoffset = PATH_TOTAL_LENGTH;
+      badgeText.textContent = "ОЖИДАНИЕ";
+      chartRate.textContent = "-- Гц";
+      if (wakeLock) {
+        wakeLock.release().catch(() => {});
+        wakeLock = null;
+      }
+    }
+
+    btnConnect.addEventListener('click', () => {
+      if (bluetoothDevice && bluetoothDevice.gatt && bluetoothDevice.gatt.connected) {
+        disconnectBluetooth();
+      } else {
+        connectBluetooth();
+      }
+    });
+  </script>
+</body>
+</html>
