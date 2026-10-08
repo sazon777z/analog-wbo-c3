@@ -241,6 +241,315 @@
       flex-shrink: 0;
     }
 
+    /* Селектор и карусель скинов */
+    .skin-selector {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px 10px 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 6px;
+    }
+
+    .skin-nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .skin-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--accent-cyan);
+    }
+
+    .skin-title-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .skin-badge {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .skin-name {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+
+    .skins-container {
+      width: 100%;
+      position: relative;
+      min-height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: pan-y;
+    }
+
+    .skin-view {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: skinFadeIn 0.2s ease-out;
+    }
+
+    .skin-view.active {
+      display: flex;
+    }
+
+    @keyframes skinFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .skin-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .skin-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .skin-dot.active {
+      width: 18px;
+      border-radius: 4px;
+      background: var(--accent-cyan);
+    }
+
+    /* СТИЛЬ 2: TOYOTA TOURER V (JZX Оптитрон) */
+    .tourerv-badge {
+      font-family: "Arial Black", -apple-system, sans-serif;
+      font-style: italic;
+      font-size: 11px;
+      letter-spacing: 1px;
+      fill: #00dd88;
+      text-anchor: middle;
+      font-weight: 900;
+    }
+
+    .tourerv-sub {
+      font-family: -apple-system, sans-serif;
+      font-size: 8px;
+      letter-spacing: 2px;
+      fill: rgba(255, 255, 255, 0.4);
+      text-anchor: middle;
+      font-weight: 700;
+    }
+
+    .tourerv-lcd {
+      background: #061510;
+      border: 1px solid #00aa66;
+      border-radius: 8px;
+      padding: 6px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 6px;
+      box-shadow: inset 0 0 10px rgba(0, 255, 120, 0.2);
+    }
+
+    .tourerv-lcd-val {
+      font-family: "Courier New", monospace;
+      font-size: 26px;
+      font-weight: 900;
+      color: #00ff88;
+      letter-spacing: 2px;
+      line-height: 1;
+      text-shadow: 0 0 8px #00ff88;
+    }
+
+    .tourerv-lcd-lbl {
+      font-size: 8px;
+      color: #00aa66;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-top: 3px;
+    }
+
+    #needleTourerV, #needleBMW {
+      transform-origin: 160px 138px;
+      transition: transform 0.06s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    /* СТИЛЬ 3: BMW M-POWER (Classic Amber) */
+    .bmw-m-badge {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      fill: #ff6600;
+      text-anchor: middle;
+    }
+
+    .bmw-sub {
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      fill: rgba(255, 255, 255, 0.45);
+      text-anchor: middle;
+    }
+
+    .bmw-economizer {
+      width: 220px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bmw-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 102, 0, 0.15);
+      border: 1px solid rgba(255, 102, 0, 0.35);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bmw-bar-fill {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, #ffaa00, #ff5500, #ff2200);
+      transition: width 0.08s ease-out;
+      box-shadow: 0 0 8px #ff6600;
+    }
+
+    .bmw-econ-labels {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #ff8833;
+      font-weight: 800;
+    }
+
+    /* СТИЛЬ 4: RACE DIGITAL (Haltech / Motec) */
+    .digital-dash {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 4px;
+    }
+
+    .digital-bargraph {
+      width: 100%;
+      max-width: 310px;
+      display: flex;
+      gap: 3px;
+      padding: 4px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+    }
+
+    .bargraph-seg {
+      flex: 1;
+      height: 14px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      transition: background 0.05s, box-shadow 0.05s;
+    }
+
+    .bargraph-seg.active-rich {
+      background: #ffaa00;
+      box-shadow: 0 0 6px #ffaa00;
+    }
+
+    .bargraph-seg.active-stoich {
+      background: #00ff66;
+      box-shadow: 0 0 8px #00ff66;
+    }
+
+    .bargraph-seg.active-lean {
+      background: #ff2244;
+      box-shadow: 0 0 8px #ff2244;
+    }
+
+    .digital-center {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 6px;
+      margin: 4px 0;
+    }
+
+    .digital-afr-val {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", monospace;
+      font-size: 68px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -2px;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .digital-afr-unit {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    .digital-sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      max-width: 310px;
+      gap: 8px;
+    }
+
+    .digital-sub-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 6px 10px;
+      text-align: center;
+    }
+
+    .digital-sub-lbl {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .digital-sub-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
     /* Дополнительные телеметрические плашки */
     .telemetry-grid {
       display: grid;
@@ -735,57 +1044,198 @@
   </div>
 
   <main class="dashboard-container">
-    <!-- Главная круговая шкала -->
+    <!-- Главная карточка с каруселью приборов -->
     <div class="gauge-card">
-      <div class="gauge-wrapper">
-        <svg class="gauge-svg" viewBox="0 0 320 255">
-          <defs>
-            <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#ff9900" />    <!-- Rich (10.0) -->
-              <stop offset="35%" stop-color="#ffcc00" />   <!-- Power Rich (12.5) -->
-              <stop offset="50%" stop-color="#00ff66" />   <!-- Stoich (14.7) -->
-              <stop offset="75%" stop-color="#00ddff" />   <!-- Lean (16.0) -->
-              <stop offset="100%" stop-color="#ff2244" />  <!-- Danger Lean (20.0) -->
-            </linearGradient>
-          </defs>
-          <!-- Фоновая дуга (размах 270 градусов, R=95, центр 160,138) -->
-          <path class="gauge-track" d="M 93 205 A 95 95 0 1 1 227 205" />
-          <!-- Активная заполняющая дуга -->
-          <path id="gaugePath" class="gauge-progress" stroke="url(#gaugeGradient)" d="M 93 205 A 95 95 0 1 1 227 205" />
-          
-          <!-- Засечки делений шкалы -->
-          <g class="gauge-hashmarks" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round">
-            <line x1="93" y1="205" x2="88" y2="210" />
-            <line x1="65" y1="138" x2="58" y2="138" />
-            <line x1="117" y1="57" x2="113" y2="50" />
-            <line x1="147" y1="44" x2="145" y2="36" stroke="#00ff66" stroke-width="2.5" />
-            <line x1="203" y1="57" x2="207" y2="50" />
-            <line x1="255" y1="138" x2="262" y2="138" />
-            <line x1="227" y1="205" x2="232" y2="210" />
-          </g>
+      <!-- Навигация выбора скина -->
+      <div class="skin-selector">
+        <button class="skin-nav-btn" id="btnPrevSkin" title="Предыдущий дизайн">◀</button>
+        <div class="skin-title-container">
+          <span class="skin-badge" id="skinBadge">ДИЗАЙН 1 ИЗ 4</span>
+          <span class="skin-name" id="skinName">CYBER SPORT</span>
+        </div>
+        <button class="skin-nav-btn" id="btnNextSkin" title="Следующий дизайн">▶</button>
+      </div>
 
-          <!-- Крупные равномерные цифры вокруг прибора (радиус R=124, строго за пределами дуги) -->
-          <g class="gauge-ticks">
-            <text id="tick10" x="72" y="228">10</text>
-            <text id="tick12" x="38" y="121">12</text>
-            <text id="tick14" x="104" y="30">14</text>
-            <text id="tickStoich" class="tick-stoich" x="143" y="17">14.7</text>
-            <text id="tick16" x="216" y="30">16</text>
-            <text id="tick18" x="282" y="121">18</text>
-            <text id="tick20" x="248" y="228">20</text>
-          </g>
-        </svg>
+      <div class="skins-container" id="skinsContainer">
+        <!-- СТИЛЬ 1: CYBER SPORT (Defi / Неон) -->
+        <div class="skin-view active" id="skinView0">
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 320 255">
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ff9900" />
+                  <stop offset="35%" stop-color="#ffcc00" />
+                  <stop offset="50%" stop-color="#00ff66" />
+                  <stop offset="75%" stop-color="#00ddff" />
+                  <stop offset="100%" stop-color="#ff2244" />
+                </linearGradient>
+              </defs>
+              <path class="gauge-track" d="M 93 205 A 95 95 0 1 1 227 205" />
+              <path id="gaugePath" class="gauge-progress" stroke="url(#gaugeGradient)" d="M 93 205 A 95 95 0 1 1 227 205" />
+              
+              <g class="gauge-hashmarks" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round">
+                <line x1="93" y1="205" x2="88" y2="210" />
+                <line x1="65" y1="138" x2="58" y2="138" />
+                <line x1="117" y1="57" x2="113" y2="50" />
+                <line x1="147" y1="44" x2="145" y2="36" stroke="#00ff66" stroke-width="2.5" />
+                <line x1="203" y1="57" x2="207" y2="50" />
+                <line x1="255" y1="138" x2="262" y2="138" />
+                <line x1="227" y1="205" x2="232" y2="210" />
+              </g>
 
-        <div class="gauge-center-content">
-          <div class="afr-value" id="valAfr">--.-</div>
-          <div class="afr-unit">AFR (A/F)</div>
+              <g class="gauge-ticks">
+                <text id="tick10" x="72" y="228">10</text>
+                <text id="tick12" x="38" y="121">12</text>
+                <text id="tick14" x="104" y="30">14</text>
+                <text id="tickStoich" class="tick-stoich" x="143" y="17">14.7</text>
+                <text id="tick16" x="216" y="30">16</text>
+                <text id="tick18" x="282" y="121">18</text>
+                <text id="tick20" x="248" y="228">20</text>
+              </g>
+            </svg>
+
+            <div class="gauge-center-content">
+              <div class="afr-value" id="valAfr">--.-</div>
+              <div class="afr-unit">AFR (A/F)</div>
+            </div>
+          </div>
+
+          <div class="status-badge" id="badgeState">
+            <span class="status-dot" id="badgeDot"></span>
+            <span id="badgeText">ОЖИДАНИЕ</span>
+          </div>
+        </div>
+
+        <!-- СТИЛЬ 2: TOYOTA TOURER V (JZX Оптитрон) -->
+        <div class="skin-view" id="skinView1">
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 320 255">
+              <circle cx="160" cy="138" r="102" fill="#06090e" stroke="rgba(0,255,136,0.35)" stroke-width="2"/>
+              <circle cx="160" cy="138" r="95" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+              
+              <g stroke="#00ffaa" stroke-width="2" stroke-linecap="round" opacity="0.85">
+                <line x1="93" y1="205" x2="86" y2="212" />
+                <line x1="65" y1="138" x2="56" y2="138" />
+                <line x1="117" y1="57" x2="111" y2="49" />
+                <line x1="147" y1="44" x2="144" y2="35" stroke="#ffffff" stroke-width="3" />
+                <line x1="203" y1="57" x2="209" y2="49" />
+                <line x1="255" y1="138" x2="264" y2="138" />
+                <line x1="227" y1="205" x2="234" y2="212" />
+              </g>
+
+              <g font-family="'Arial Black', sans-serif" font-style="italic" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+                <text id="tTourer10" x="72" y="228">10</text>
+                <text id="tTourer12" x="36" y="121">12</text>
+                <text id="tTourer14" x="104" y="30">14</text>
+                <text id="tTourerStoich" x="143" y="16" fill="#00ff88" font-size="14.5">14.7</text>
+                <text id="tTourer16" x="216" y="30">16</text>
+                <text id="tTourer18" x="284" y="121">18</text>
+                <text id="tTourer20" x="248" y="228">20</text>
+              </g>
+
+              <text x="160" y="86" class="tourerv-badge">TOURER V</text>
+              <text x="160" y="99" class="tourerv-sub">TWIN TURBO</text>
+
+              <g id="needleTourerV" transform="rotate(-135, 160, 138)">
+                <line x1="160" y1="148" x2="160" y2="42" stroke="#ff2233" stroke-width="3.5" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(255,34,51,0.9))"/>
+                <line x1="160" y1="140" x2="160" y2="46" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+                <circle cx="160" cy="138" r="15" fill="#0a0d14" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+                <circle cx="160" cy="138" r="4.5" fill="#ff2233"/>
+              </g>
+            </svg>
+          </div>
+          <div class="tourerv-lcd">
+            <span class="tourerv-lcd-val" id="valAfrTourerV">--.-</span>
+            <span class="tourerv-lcd-lbl">AIR/FUEL RATIO</span>
+          </div>
+        </div>
+
+        <!-- СТИЛЬ 3: BMW M-POWER (Classic Amber) -->
+        <div class="skin-view" id="skinView2">
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 320 255">
+              <circle cx="160" cy="138" r="102" fill="#0c0a08" stroke="rgba(255,102,0,0.4)" stroke-width="2"/>
+              <circle cx="160" cy="138" r="95" fill="none" stroke="rgba(255,102,0,0.15)" stroke-width="1"/>
+
+              <g stroke="#ff6600" stroke-width="2" stroke-linecap="round">
+                <line x1="93" y1="205" x2="87" y2="211" />
+                <line x1="65" y1="138" x2="57" y2="138" />
+                <line x1="117" y1="57" x2="112" y2="50" />
+                <line x1="147" y1="44" x2="145" y2="36" stroke="#ffffff" stroke-width="2.5" />
+                <line x1="203" y1="57" x2="208" y2="50" />
+                <line x1="255" y1="138" x2="263" y2="138" />
+                <line x1="227" y1="205" x2="233" y2="211" />
+              </g>
+
+              <g font-family="-apple-system, sans-serif" font-weight="800" font-size="14" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+                <text id="tBMW10" x="72" y="228">10</text>
+                <text id="tBMW12" x="38" y="121">12</text>
+                <text id="tBMW14" x="104" y="30">14</text>
+                <text id="tBMWStoich" x="143" y="17" fill="#ff7700" font-weight="900">14.7</text>
+                <text id="tBMW16" x="216" y="30">16</text>
+                <text id="tBMW18" x="282" y="121">18</text>
+                <text id="tBMW20" x="248" y="228">20</text>
+              </g>
+
+              <text x="160" y="86" class="bmw-m-badge">///M POWER</text>
+              <text x="160" y="99" class="bmw-sub">AFR GAUGE</text>
+
+              <g id="needleBMW" transform="rotate(-135, 160, 138)">
+                <line x1="160" y1="148" x2="160" y2="42" stroke="#ff3300" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,60,0,0.8))"/>
+                <circle cx="160" cy="138" r="13" fill="#14100c" stroke="rgba(255,102,0,0.6)" stroke-width="1.5"/>
+                <circle cx="160" cy="138" r="3.5" fill="#ff3300"/>
+              </g>
+            </svg>
+          </div>
+          <div class="bmw-economizer">
+            <div class="bmw-bar-bg">
+              <div class="bmw-bar-fill" id="bmwBarFill"></div>
+            </div>
+            <div class="bmw-econ-labels">
+              <span>RICH</span>
+              <span id="valAfrBMW" style="color:#ffffff; font-size:14px; font-weight:900;">--.- AFR</span>
+              <span>LEAN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- СТИЛЬ 4: RACE DIGITAL (Гоночный дисплей Haltech/Motec) -->
+        <div class="skin-view" id="skinView3">
+          <div class="digital-dash">
+            <div class="digital-bargraph" id="digitalBargraph">
+              <!-- Сегменты генерируются в JS -->
+            </div>
+
+            <div class="digital-center">
+              <div class="digital-afr-val" id="valAfrDigital">--.-</div>
+              <div class="digital-afr-unit">AFR</div>
+            </div>
+
+            <div class="digital-sub-grid">
+              <div class="digital-sub-box">
+                <div class="digital-sub-lbl">LAMBDA</div>
+                <div class="digital-sub-val" id="valLambdaDigital">-.--</div>
+              </div>
+              <div class="digital-sub-box">
+                <div class="digital-sub-lbl">SENSOR VOLTS</div>
+                <div class="digital-sub-val" id="valVoltsDigital">-.-- V</div>
+              </div>
+            </div>
+
+            <div class="status-badge" id="badgeStateDigital" style="margin-top:2px;">
+              <span class="status-dot" id="badgeDotDigital"></span>
+              <span id="badgeTextDigital">ОЖИДАНИЕ</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Статусный бейдж смеси - вынесен под циферблат -->
-      <div class="status-badge" id="badgeState">
-        <span class="status-dot" id="badgeDot"></span>
-        <span id="badgeText">ОЖИДАНИЕ</span>
+      <!-- Точки карусели -->
+      <div class="skin-dots" id="skinDots">
+        <span class="skin-dot active" data-index="0"></span>
+        <span class="skin-dot" data-index="1"></span>
+        <span class="skin-dot" data-index="2"></span>
+        <span class="skin-dot" data-index="3"></span>
       </div>
     </div>
 
@@ -915,6 +1365,129 @@
       btnAudio.textContent = audioAlertEnabled ? '🔔' : '🔕';
       btnAudio.style.opacity = audioAlertEnabled ? '1' : '0.5';
     });
+
+    // ================= СТИЛИ ПРИБОРОВ (SKINS) =================
+    const SKINS = [
+      { id: 'cyber', name: 'CYBER SPORT', badge: 'ДИЗАЙН 1 ИЗ 4' },
+      { id: 'tourerv', name: 'TOYOTA TOURER V', badge: 'ДИЗАЙН 2 ИЗ 4' },
+      { id: 'bmw', name: 'BMW M-POWER', badge: 'ДИЗАЙН 3 ИЗ 4' },
+      { id: 'digital', name: 'RACE DIGITAL', badge: 'ДИЗАЙН 4 ИЗ 4' }
+    ];
+
+    let currentSkinIdx = 0;
+    try {
+      const savedSkin = localStorage.getItem('wbo_skin_idx');
+      if (savedSkin !== null) {
+        currentSkinIdx = parseInt(savedSkin, 10) || 0;
+        if (currentSkinIdx < 0 || currentSkinIdx >= SKINS.length) currentSkinIdx = 0;
+      }
+    } catch (e) {}
+
+    const btnPrevSkin = document.getElementById('btnPrevSkin');
+    const btnNextSkin = document.getElementById('btnNextSkin');
+    const skinBadge = document.getElementById('skinBadge');
+    const skinName = document.getElementById('skinName');
+    const skinDots = document.querySelectorAll('.skin-dot');
+    const skinViews = [
+      document.getElementById('skinView0'),
+      document.getElementById('skinView1'),
+      document.getElementById('skinView2'),
+      document.getElementById('skinView3')
+    ];
+    const skinsContainer = document.getElementById('skinsContainer');
+
+    // Элементы скина 2 (Tourer V)
+    const needleTourerV = document.getElementById('needleTourerV');
+    const valAfrTourerV = document.getElementById('valAfrTourerV');
+
+    // Элементы скина 3 (BMW)
+    const needleBMW = document.getElementById('needleBMW');
+    const valAfrBMW = document.getElementById('valAfrBMW');
+    const bmwBarFill = document.getElementById('bmwBarFill');
+
+    // Элементы скина 4 (Digital)
+    const digitalBargraph = document.getElementById('digitalBargraph');
+    const valAfrDigital = document.getElementById('valAfrDigital');
+    const valLambdaDigital = document.getElementById('valLambdaDigital');
+    const valVoltsDigital = document.getElementById('valVoltsDigital');
+    const badgeStateDigital = document.getElementById('badgeStateDigital');
+    const badgeDotDigital = document.getElementById('badgeDotDigital');
+    const badgeTextDigital = document.getElementById('badgeTextDigital');
+
+    // Создание сегментов бар-графа (20 шт.)
+    const BAR_SEGMENTS_COUNT = 20;
+    const barSegments = [];
+    if (digitalBargraph) {
+      digitalBargraph.innerHTML = '';
+      for (let i = 0; i < BAR_SEGMENTS_COUNT; i++) {
+        const seg = document.createElement('div');
+        seg.className = 'bargraph-seg';
+        digitalBargraph.appendChild(seg);
+        barSegments.push(seg);
+      }
+    }
+
+    function setSkin(idx) {
+      currentSkinIdx = (idx + SKINS.length) % SKINS.length;
+      try {
+        localStorage.setItem('wbo_skin_idx', currentSkinIdx);
+      } catch (e) {}
+
+      if (skinBadge) skinBadge.textContent = SKINS[currentSkinIdx].badge;
+      if (skinName) skinName.textContent = SKINS[currentSkinIdx].name;
+
+      skinViews.forEach((view, i) => {
+        if (view) {
+          if (i === currentSkinIdx) view.classList.add('active');
+          else view.classList.remove('active');
+        }
+      });
+
+      skinDots.forEach((dot, i) => {
+        if (i === currentSkinIdx) dot.classList.add('active');
+        else dot.classList.remove('active');
+      });
+    }
+
+    if (btnPrevSkin) btnPrevSkin.addEventListener('click', () => setSkin(currentSkinIdx - 1));
+    if (btnNextSkin) btnNextSkin.addEventListener('click', () => setSkin(currentSkinIdx + 1));
+
+    skinDots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => setSkin(idx));
+    });
+
+    // Сенсорный свайп влево / вправо
+    if (skinsContainer) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      skinsContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      skinsContainer.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) {
+            setSkin(currentSkinIdx + 1);
+          } else {
+            setSkin(currentSkinIdx - 1);
+          }
+        }
+      }, { passive: true });
+    }
+
+    // Переключение клавишами стрелок
+    window.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
+      if (e.key === 'ArrowLeft') setSkin(currentSkinIdx - 1);
+      if (e.key === 'ArrowRight') setSkin(currentSkinIdx + 1);
+    });
+
+    setSkin(currentSkinIdx);
 
     // ================== КАЛИБРОВКА ШЛЗ ==================
     const DEFAULT_CALIB = {
@@ -1051,6 +1624,7 @@
       const maxA = Math.max(userCalib.afr1, userCalib.afr2);
       const range = maxA - minA;
 
+      // Скин 1: Cyber Sport
       const t10 = document.getElementById('tick10');
       const t12 = document.getElementById('tick12');
       const t14 = document.getElementById('tick14');
@@ -1058,7 +1632,6 @@
       const t16 = document.getElementById('tick16');
       const t18 = document.getElementById('tick18');
       const t20 = document.getElementById('tick20');
-
       if (t10 && t20) {
         t10.textContent = minA.toFixed(minA % 1 === 0 ? 0 : 1);
         t12.textContent = (minA + range * 0.2).toFixed(1);
@@ -1067,6 +1640,42 @@
         t16.textContent = (minA + range * 0.6).toFixed(1);
         t18.textContent = (minA + range * 0.8).toFixed(1);
         t20.textContent = maxA.toFixed(maxA % 1 === 0 ? 0 : 1);
+      }
+
+      // Скин 2: Toyota Tourer V
+      const tt10 = document.getElementById('tTourer10');
+      const tt12 = document.getElementById('tTourer12');
+      const tt14 = document.getElementById('tTourer14');
+      const ttStoich = document.getElementById('tTourerStoich');
+      const tt16 = document.getElementById('tTourer16');
+      const tt18 = document.getElementById('tTourer18');
+      const tt20 = document.getElementById('tTourer20');
+      if (tt10 && tt20) {
+        tt10.textContent = minA.toFixed(minA % 1 === 0 ? 0 : 1);
+        tt12.textContent = (minA + range * 0.2).toFixed(1);
+        tt14.textContent = (minA + range * 0.4).toFixed(1);
+        ttStoich.textContent = userCalib.stoich.toFixed(1);
+        tt16.textContent = (minA + range * 0.6).toFixed(1);
+        tt18.textContent = (minA + range * 0.8).toFixed(1);
+        tt20.textContent = maxA.toFixed(maxA % 1 === 0 ? 0 : 1);
+      }
+
+      // Скин 3: BMW M-Power
+      const tb10 = document.getElementById('tBMW10');
+      const tb12 = document.getElementById('tBMW12');
+      const tb14 = document.getElementById('tBMW14');
+      const tbStoich = document.getElementById('tBMWStoich');
+      const tb16 = document.getElementById('tBMW16');
+      const tb18 = document.getElementById('tBMW18');
+      const tb20 = document.getElementById('tBMW20');
+      if (tb10 && tb20) {
+        tb10.textContent = minA.toFixed(minA % 1 === 0 ? 0 : 1);
+        tb12.textContent = (minA + range * 0.2).toFixed(1);
+        tb14.textContent = (minA + range * 0.4).toFixed(1);
+        tbStoich.textContent = userCalib.stoich.toFixed(1);
+        tb16.textContent = (minA + range * 0.6).toFixed(1);
+        tb18.textContent = (minA + range * 0.8).toFixed(1);
+        tb20.textContent = maxA.toFixed(maxA % 1 === 0 ? 0 : 1);
       }
     }
     updateScaleLabels();
@@ -1102,49 +1711,99 @@
       valLambda.textContent = lambda.toFixed(2);
       valVolts.textContent = volts.toFixed(2) + ' В';
 
-      // 2. Движение дуги спидометра (шкала от minAfr до maxAfr)
+      // 2. Расчет положения стрелки / дуги (шкала от minAfr до maxAfr)
       const minA = Math.min(userCalib.afr1, userCalib.afr2);
       const maxA = Math.max(userCalib.afr1, userCalib.afr2);
       const clampedAfr = Math.min(Math.max(afr, minA), maxA);
       const ratio = (clampedAfr - minA) / (maxA - minA || 1);
+
+      // Скин 1: Cyber Sport
       const offset = PATH_TOTAL_LENGTH * (1 - ratio);
       gaugePath.style.strokeDashoffset = offset;
+
+      // Скин 2: Toyota Tourer V (Угол стрелки от -135° до +135°)
+      const needleAngle = -135 + ratio * 270;
+      if (needleTourerV) {
+        needleTourerV.style.transform = `rotate(${needleAngle.toFixed(1)}deg)`;
+        needleTourerV.setAttribute('transform', `rotate(${needleAngle.toFixed(1)}, 160, 138)`);
+      }
+      if (valAfrTourerV) valAfrTourerV.textContent = afr.toFixed(2);
+
+      // Скин 3: BMW M-Power
+      if (needleBMW) {
+        needleBMW.style.transform = `rotate(${needleAngle.toFixed(1)}deg)`;
+        needleBMW.setAttribute('transform', `rotate(${needleAngle.toFixed(1)}, 160, 138)`);
+      }
+      if (valAfrBMW) valAfrBMW.textContent = afr.toFixed(2) + ' AFR';
+      if (bmwBarFill) bmwBarFill.style.width = `${(ratio * 100).toFixed(1)}%`;
+
+      // Скин 4: Race Digital
+      if (valAfrDigital) valAfrDigital.textContent = afr.toFixed(2);
+      if (valLambdaDigital) valLambdaDigital.textContent = lambda.toFixed(2);
+      if (valVoltsDigital) valVoltsDigital.textContent = volts.toFixed(2) + ' V';
+
+      // Обновление сегментов светодиодного бар-графа
+      const activeSegs = Math.round(ratio * BAR_SEGMENTS_COUNT);
+      barSegments.forEach((seg, i) => {
+        if (i < activeSegs) {
+          if (i <= 7) seg.className = 'bargraph-seg active-rich';
+          else if (i <= 12) seg.className = 'bargraph-seg active-stoich';
+          else seg.className = 'bargraph-seg active-lean';
+        } else {
+          seg.className = 'bargraph-seg';
+        }
+      });
 
       // 3. Зоны смеси и цветовая дифференциация относительно стехиометрии
       const stoich = userCalib.stoich;
       valAfr.classList.remove('color-rich', 'color-stoich', 'color-lean');
+      if (valAfrDigital) valAfrDigital.classList.remove('color-rich', 'color-stoich', 'color-lean');
+
+      let stateText = "";
+      let stateColor = "";
+      let alertDanger = false;
+
       if (afr < stoich - 2.0) {
         // Богатая смесь (Rich)
         valAfr.classList.add('color-rich');
-        badgeText.textContent = "БОГАТАЯ (RICH)";
-        badgeDot.style.background = "var(--accent-amber)";
-        badgeState.style.borderColor = "var(--accent-amber)";
+        if (valAfrDigital) valAfrDigital.classList.add('color-rich');
+        stateText = "БОГАТАЯ (RICH)";
+        stateColor = "var(--accent-amber)";
       } else if (afr >= stoich - 2.0 && afr <= stoich - 1.0) {
         // Мощностная смесь (Best Power)
         valAfr.classList.add('color-stoich');
-        badgeText.textContent = "МОЩНОСТЬ (POWER)";
-        badgeDot.style.background = "#77ff00";
-        badgeState.style.borderColor = "#77ff00";
+        if (valAfrDigital) valAfrDigital.classList.add('color-stoich');
+        stateText = "МОЩНОСТЬ (POWER)";
+        stateColor = "#77ff00";
       } else if (afr > stoich - 1.0 && afr <= stoich + 0.6) {
         // Стехиометрия / Круиз
         valAfr.classList.add('color-stoich');
-        badgeText.textContent = `СТЕХИОМЕТРИЯ (${stoich.toFixed(1)})`;
-        badgeDot.style.background = "var(--accent-green)";
-        badgeState.style.borderColor = "var(--accent-green)";
+        if (valAfrDigital) valAfrDigital.classList.add('color-stoich');
+        stateText = `СТЕХИОМЕТРИЯ (${stoich.toFixed(1)})`;
+        stateColor = "var(--accent-green)";
       } else {
         // Бедная смесь (Lean)
         valAfr.classList.add('color-lean');
-        badgeText.textContent = (afr > stoich + 1.8) ? "ОПАСНО: БЕДНАЯ!" : "БЕДНАЯ (LEAN)";
-        badgeDot.style.background = "var(--accent-red)";
-        badgeState.style.borderColor = "var(--accent-red)";
+        if (valAfrDigital) valAfrDigital.classList.add('color-lean');
+        alertDanger = (afr > stoich + 1.8);
+        stateText = alertDanger ? "ОПАСНО: БЕДНАЯ!" : "БЕДНАЯ (LEAN)";
+        stateColor = "var(--accent-red)";
 
         // Звуковое предупреждение при опасном забеднении
         const now = performance.now();
-        if (afr > stoich + 1.8 && now - lastAlertTime > 1500) {
+        if (alertDanger && now - lastAlertTime > 1500) {
           playBeep(980, 0.15);
           lastAlertTime = now;
         }
       }
+
+      badgeText.textContent = stateText;
+      badgeDot.style.background = stateColor;
+      badgeState.style.borderColor = stateColor;
+
+      if (badgeTextDigital) badgeTextDigital.textContent = stateText;
+      if (badgeDotDigital) badgeDotDigital.style.background = stateColor;
+      if (badgeStateDigital) badgeStateDigital.style.borderColor = stateColor;
 
       // 4. Добавление точки в буфер графика
       historyData.push(afr);
@@ -1316,6 +1975,25 @@
       gaugePath.style.strokeDashoffset = PATH_TOTAL_LENGTH;
       badgeText.textContent = "ОЖИДАНИЕ";
       chartRate.textContent = "-- Гц";
+
+      // Сброс всех скинов
+      if (needleTourerV) {
+        needleTourerV.style.transform = "rotate(-135deg)";
+        needleTourerV.setAttribute('transform', 'rotate(-135, 160, 138)');
+      }
+      if (valAfrTourerV) valAfrTourerV.textContent = "--.-";
+      if (needleBMW) {
+        needleBMW.style.transform = "rotate(-135deg)";
+        needleBMW.setAttribute('transform', 'rotate(-135, 160, 138)');
+      }
+      if (valAfrBMW) valAfrBMW.textContent = "--.- AFR";
+      if (bmwBarFill) bmwBarFill.style.width = "0%";
+      if (valAfrDigital) valAfrDigital.textContent = "--.-";
+      if (valLambdaDigital) valLambdaDigital.textContent = "-.--";
+      if (valVoltsDigital) valVoltsDigital.textContent = "-.-- V";
+      if (badgeTextDigital) badgeTextDigital.textContent = "ОЖИДАНИЕ";
+      barSegments.forEach(seg => seg.className = 'bargraph-seg');
+
       if (wakeLock) {
         wakeLock.release().catch(() => {});
         wakeLock = null;
