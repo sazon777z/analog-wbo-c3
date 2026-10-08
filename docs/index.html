@@ -452,6 +452,163 @@
       text-shadow: var(--glow-lean);
     }
 
+    /* Модальное окно калибровки ШЛЗ */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: #11151f;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .form-select, .form-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-select:focus, .form-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .form-select option {
+      background: #12161f;
+      color: #fff;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-preview {
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-save {
+      flex: 2;
+      background: linear-gradient(135deg, #00f0ff, #0077ff);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.1s ease;
+    }
+
+    .btn-save:active {
+      transform: scale(0.98);
+    }
+
+    .btn-reset {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
     /* Адаптив для маленьких экранов */
     @media (max-height: 700px) {
       .gauge-wrapper {
@@ -485,10 +642,89 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="icon-btn" id="btnSettings" title="Калибровка датчика">⚙️</button>
       <button class="icon-btn" id="btnAudio" title="Звук предупреждения">🔔</button>
       <button class="icon-btn" id="btnFullscreen" title="На весь экран">⛶</button>
     </div>
   </header>
+
+  <!-- Модальное окно калибровки ШЛЗ -->
+  <div class="modal-backdrop" id="modalCalib">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">⚙️ КАЛИБРОВКА ШЛЗ</div>
+        <button class="btn-close" id="btnCloseModal">✕</button>
+      </div>
+
+      <!-- Быстрый пресет -->
+      <div class="form-group">
+        <label class="form-label">Готовый профиль контроллера</label>
+        <select class="form-select" id="selPreset">
+          <option value="standard">Стандарт: 0–5 В = 10–20 AFR (AEM, Spartan 2/3)</option>
+          <option value="innovate">Innovate: 0–5 В = 7.35–22.39 AFR (LC-2, MTX-L)</option>
+          <option value="aem_x">AEM X-Series: 0.5–4.5 В = 8.5–18.0 AFR</option>
+          <option value="custom">Пользовательский (Ручной ввод)</option>
+        </select>
+      </div>
+
+      <!-- Точки калибровки 1 и 2 -->
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Мин. Вольт (V1)</label>
+          <input type="number" step="0.01" class="form-input" id="inpV1" value="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Мин. AFR (AFR1)</label>
+          <input type="number" step="0.01" class="form-input" id="inpAfr1" value="10.00">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Макс. Вольт (V2)</label>
+          <input type="number" step="0.01" class="form-input" id="inpV2" value="5.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Макс. AFR (AFR2)</label>
+          <input type="number" step="0.01" class="form-input" id="inpAfr2" value="20.00">
+        </div>
+      </div>
+
+      <!-- Дополнительная подстройка -->
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Смещение масс (Offset, В)</label>
+          <input type="number" step="0.01" class="form-input" id="inpOffset" value="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Делитель напряжения</label>
+          <input type="number" step="0.01" class="form-input" id="inpDivider" value="2.00">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Тип топлива (Стехиометрия)</label>
+        <select class="form-select" id="selFuel">
+          <option value="14.70">Бензин (14.7 AFR = λ 1.00)</option>
+          <option value="9.76">Спирт / E85 (9.76 AFR = λ 1.00)</option>
+          <option value="15.50">Газ / Пропан LPG (15.5 AFR = λ 1.00)</option>
+          <option value="14.50">Дизель (14.5 AFR = λ 1.00)</option>
+        </select>
+      </div>
+
+      <!-- Живой предпросмотр -->
+      <div class="modal-preview">
+        <span>Вход: <strong id="prevVolts">0.00 В</strong></span>
+        <span>Расчет: <strong id="prevAfr" style="color:var(--accent-cyan);">10.00 AFR</strong> (λ <span id="prevLambda">0.68</span>)</span>
+      </div>
+
+      <!-- Кнопки управления -->
+      <div class="modal-actions">
+        <button class="btn-reset" id="btnResetCalib">Сброс</button>
+        <button class="btn-save" id="btnSaveCalib">Сохранить и применить</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Баннер автообновления PWA -->
   <div class="update-banner" id="updateBanner">
@@ -667,50 +903,206 @@
       btnAudio.style.opacity = audioAlertEnabled ? '1' : '0.5';
     });
 
+    // ================== КАЛИБРОВКА ШЛЗ ==================
+    const DEFAULT_CALIB = {
+      preset: 'standard',
+      v1: 0.00,
+      afr1: 10.00,
+      v2: 5.00,
+      afr2: 20.00,
+      offset: 0.00,
+      divider: 2.00,
+      stoich: 14.70
+    };
+
+    let userCalib = { ...DEFAULT_CALIB };
+    try {
+      const saved = localStorage.getItem('wbo_calib');
+      if (saved) {
+        userCalib = { ...DEFAULT_CALIB, ...JSON.parse(saved) };
+      }
+    } catch (e) {
+      console.warn('Ошибка загрузки калибровки:', e);
+    }
+
+    const PRESETS = {
+      standard: { v1: 0.00, afr1: 10.00, v2: 5.00, afr2: 20.00 },
+      innovate: { v1: 0.00, afr1: 7.35,  v2: 5.00, afr2: 22.39 },
+      aem_x:    { v1: 0.50, afr1: 8.50,  v2: 4.50, afr2: 18.00 },
+      custom:   null
+    };
+
+    // Элементы модального окна
+    const btnSettings = document.getElementById('btnSettings');
+    const modalCalib = document.getElementById('modalCalib');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const selPreset = document.getElementById('selPreset');
+    const inpV1 = document.getElementById('inpV1');
+    const inpAfr1 = document.getElementById('inpAfr1');
+    const inpV2 = document.getElementById('inpV2');
+    const inpAfr2 = document.getElementById('inpAfr2');
+    const inpOffset = document.getElementById('inpOffset');
+    const inpDivider = document.getElementById('inpDivider');
+    const selFuel = document.getElementById('selFuel');
+    const prevVolts = document.getElementById('prevVolts');
+    const prevAfr = document.getElementById('prevAfr');
+    const prevLambda = document.getElementById('prevLambda');
+    const btnSaveCalib = document.getElementById('btnSaveCalib');
+    const btnResetCalib = document.getElementById('btnResetCalib');
+
+    let lastKnownVolts = 2.35; // Последнее известное входное напряжение
+
+    function calculateFromVolts(rawV) {
+      const vEff = rawV + userCalib.offset;
+      const vRange = userCalib.v2 - userCalib.v1;
+      const afrRange = userCalib.afr2 - userCalib.afr1;
+      let afr;
+      if (Math.abs(vRange) < 0.0001) {
+        afr = userCalib.afr1;
+      } else {
+        afr = userCalib.afr1 + ((vEff - userCalib.v1) / vRange) * afrRange;
+      }
+      const minA = Math.min(userCalib.afr1, userCalib.afr2);
+      const maxA = Math.max(userCalib.afr1, userCalib.afr2);
+      afr = Math.min(Math.max(afr, minA), maxA);
+      const lambda = afr / userCalib.stoich;
+      return { afr, lambda, vEff };
+    }
+
+    function populateModalFields() {
+      selPreset.value = userCalib.preset || 'custom';
+      inpV1.value = userCalib.v1.toFixed(2);
+      inpAfr1.value = userCalib.afr1.toFixed(2);
+      inpV2.value = userCalib.v2.toFixed(2);
+      inpAfr2.value = userCalib.afr2.toFixed(2);
+      inpOffset.value = userCalib.offset.toFixed(2);
+      inpDivider.value = userCalib.divider.toFixed(2);
+      selFuel.value = userCalib.stoich.toFixed(2);
+      updateModalPreview();
+    }
+
+    function updateModalPreview() {
+      const v1 = parseFloat(inpV1.value) || 0;
+      const a1 = parseFloat(inpAfr1.value) || 10;
+      const v2 = parseFloat(inpV2.value) || 5;
+      const a2 = parseFloat(inpAfr2.value) || 20;
+      const off = parseFloat(inpOffset.value) || 0;
+      const stoich = parseFloat(selFuel.value) || 14.7;
+
+      const vEff = lastKnownVolts + off;
+      const vRange = v2 - v1;
+      let afr = Math.abs(vRange) > 0.0001 ? a1 + ((vEff - v1) / vRange) * (a2 - a1) : a1;
+      const minA = Math.min(a1, a2);
+      const maxA = Math.max(a1, a2);
+      afr = Math.min(Math.max(afr, minA), maxA);
+      const lam = afr / stoich;
+
+      prevVolts.textContent = lastKnownVolts.toFixed(2) + ' В';
+      prevAfr.textContent = afr.toFixed(2) + ' AFR';
+      prevLambda.textContent = lam.toFixed(2);
+    }
+
+    btnSettings.addEventListener('click', () => {
+      populateModalFields();
+      modalCalib.style.display = 'flex';
+    });
+
+    btnCloseModal.addEventListener('click', () => {
+      modalCalib.style.display = 'none';
+    });
+
+    modalCalib.addEventListener('click', (e) => {
+      if (e.target === modalCalib) modalCalib.style.display = 'none';
+    });
+
+    selPreset.addEventListener('change', () => {
+      const p = selPreset.value;
+      if (PRESETS[p]) {
+        inpV1.value = PRESETS[p].v1.toFixed(2);
+        inpAfr1.value = PRESETS[p].afr1.toFixed(2);
+        inpV2.value = PRESETS[p].v2.toFixed(2);
+        inpAfr2.value = PRESETS[p].afr2.toFixed(2);
+      }
+      updateModalPreview();
+    });
+
+    [inpV1, inpAfr1, inpV2, inpAfr2, inpOffset, inpDivider, selFuel].forEach(el => {
+      el.addEventListener('input', () => {
+        selPreset.value = 'custom';
+        updateModalPreview();
+      });
+    });
+
+    btnSaveCalib.addEventListener('click', () => {
+      userCalib = {
+        preset: selPreset.value,
+        v1: parseFloat(inpV1.value) || 0.0,
+        afr1: parseFloat(inpAfr1.value) || 10.0,
+        v2: parseFloat(inpV2.value) || 5.0,
+        afr2: parseFloat(inpAfr2.value) || 20.0,
+        offset: parseFloat(inpOffset.value) || 0.0,
+        divider: parseFloat(inpDivider.value) || 2.0,
+        stoich: parseFloat(selFuel.value) || 14.7
+      };
+      localStorage.setItem('wbo_calib', JSON.stringify(userCalib));
+      modalCalib.style.display = 'none';
+      alert('Калибровка сохранена!');
+    });
+
+    btnResetCalib.addEventListener('click', () => {
+      userCalib = { ...DEFAULT_CALIB };
+      localStorage.removeItem('wbo_calib');
+      populateModalFields();
+      alert('Сброшено к стандартным параметрам (0-5 В = 10-20 AFR)!');
+    });
+
     // Обновление физических показаний на экране
     let lastAlertTime = 0;
     function updateDisplay(afr, volts, lambda) {
-      // 1. Цифровые значения
+      lastKnownVolts = volts;
       valAfr.textContent = afr.toFixed(2);
       valLambda.textContent = lambda.toFixed(2);
       valVolts.textContent = volts.toFixed(2) + ' В';
 
-      // 2. Движение дуги спидометра (шкала от 10.0 до 20.0 AFR)
-      const clampedAfr = Math.min(Math.max(afr, 10.0), 20.0);
-      const ratio = (clampedAfr - 10.0) / (20.0 - 10.0);
+      // 2. Движение дуги спидометра (шкала от minAfr до maxAfr)
+      const minA = Math.min(userCalib.afr1, userCalib.afr2);
+      const maxA = Math.max(userCalib.afr1, userCalib.afr2);
+      const clampedAfr = Math.min(Math.max(afr, minA), maxA);
+      const ratio = (clampedAfr - minA) / (maxA - minA || 1);
       const offset = PATH_TOTAL_LENGTH * (1 - ratio);
       gaugePath.style.strokeDashoffset = offset;
 
-      // 3. Зоны смеси и цветовая дифференциация
+      // 3. Зоны смеси и цветовая дифференциация относительно стехиометрии
+      const stoich = userCalib.stoich;
       valAfr.classList.remove('color-rich', 'color-stoich', 'color-lean');
-      if (afr < 12.5) {
+      if (afr < stoich - 2.0) {
         // Богатая смесь (Rich)
         valAfr.classList.add('color-rich');
         badgeText.textContent = "БОГАТАЯ (RICH)";
         badgeDot.style.background = "var(--accent-amber)";
         badgeState.style.borderColor = "var(--accent-amber)";
-      } else if (afr >= 12.5 && afr <= 13.5) {
+      } else if (afr >= stoich - 2.0 && afr <= stoich - 1.0) {
         // Мощностная смесь (Best Power)
         valAfr.classList.add('color-stoich');
         badgeText.textContent = "МОЩНОСТЬ (POWER)";
         badgeDot.style.background = "#77ff00";
         badgeState.style.borderColor = "#77ff00";
-      } else if (afr > 13.5 && afr <= 15.2) {
+      } else if (afr > stoich - 1.0 && afr <= stoich + 0.6) {
         // Стехиометрия / Круиз
         valAfr.classList.add('color-stoich');
-        badgeText.textContent = "СТЕХИОМЕТРИЯ (14.7)";
+        badgeText.textContent = `СТЕХИОМЕТРИЯ (${stoich.toFixed(1)})`;
         badgeDot.style.background = "var(--accent-green)";
         badgeState.style.borderColor = "var(--accent-green)";
       } else {
         // Бедная смесь (Lean)
         valAfr.classList.add('color-lean');
-        badgeText.textContent = (afr > 16.5) ? "ОПАСНО: БЕДНАЯ!" : "БЕДНАЯ (LEAN)";
+        badgeText.textContent = (afr > stoich + 1.8) ? "ОПАСНО: БЕДНАЯ!" : "БЕДНАЯ (LEAN)";
         badgeDot.style.background = "var(--accent-red)";
         badgeState.style.borderColor = "var(--accent-red)";
 
         // Звуковое предупреждение при опасном забеднении
         const now = performance.now();
-        if (afr > 16.5 && now - lastAlertTime > 1500) {
+        if (afr > stoich + 1.8 && now - lastAlertTime > 1500) {
           playBeep(980, 0.15);
           lastAlertTime = now;
         }
@@ -811,14 +1203,16 @@
         incomingBuffer = incomingBuffer.substring(lineEndIndex + 1);
 
         if (line.length > 0) {
-          // Формат: "14.72,2.36,1.00"
+          // Формат пакета: "14.72,2.36,1.00"
           const parts = line.split(',');
-          if (parts.length >= 3) {
-            const afr = parseFloat(parts[0]);
-            const volts = parseFloat(parts[1]);
-            const lambda = parseFloat(parts[2]);
-            if (!isNaN(afr) && !isNaN(volts) && !isNaN(lambda)) {
-              updateDisplay(afr, volts, lambda);
+          if (parts.length >= 2) {
+            const rawVolts = parseFloat(parts[1]);
+            if (!isNaN(rawVolts)) {
+              const calc = calculateFromVolts(rawVolts);
+              updateDisplay(calc.afr, rawVolts, calc.lambda);
+              if (modalCalib.style.display === 'flex') {
+                updateModalPreview();
+              }
             }
           }
         }
