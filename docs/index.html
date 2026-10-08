@@ -144,88 +144,91 @@
 
     .gauge-wrapper {
       position: relative;
-      width: 290px;
-      height: 250px;
+      width: 280px;
+      height: 215px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
     svg.gauge-svg {
-      width: 290px;
-      height: 250px;
-      transform: rotate(0deg);
+      width: 280px;
+      height: 215px;
+      overflow: visible;
     }
 
     .gauge-track {
       fill: none;
-      stroke: rgba(255, 255, 255, 0.06);
-      stroke-width: 16;
+      stroke: rgba(255, 255, 255, 0.07);
+      stroke-width: 14;
       stroke-linecap: round;
     }
 
     .gauge-progress {
       fill: none;
-      stroke-width: 16;
+      stroke-width: 14;
       stroke-linecap: round;
-      stroke-dasharray: 565;
-      stroke-dashoffset: 565;
+      stroke-dasharray: 477;
+      stroke-dashoffset: 477;
       transition: stroke-dashoffset 0.08s ease-out, stroke 0.2s ease;
-      filter: drop-shadow(0 0 10px currentColor);
+      filter: drop-shadow(0 0 8px currentColor);
     }
 
     .gauge-ticks text {
       fill: var(--text-muted);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       text-anchor: middle;
       dominant-baseline: central;
     }
 
     .gauge-center-content {
       position: absolute;
-      top: 105px;
+      top: 75px;
       left: 0;
       right: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
     }
 
     .afr-value {
-      font-size: 64px;
+      font-size: 56px;
       font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -1.5px;
+      line-height: 1;
+      letter-spacing: -1px;
       font-variant-numeric: tabular-nums;
       transition: color 0.15s ease, text-shadow 0.15s ease;
       color: var(--text-main);
     }
 
     .afr-unit {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       color: var(--text-muted);
-      margin-top: 6px;
+      margin-top: 5px;
       text-transform: uppercase;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+      justify-content: center;
+      gap: 7px;
+      padding: 7px 18px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 1.2px;
       text-transform: uppercase;
-      margin-top: 6px;
-      background: rgba(255, 255, 255, 0.05);
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       transition: all 0.2s ease;
+      max-width: 90%;
     }
 
     .status-dot {
@@ -233,6 +236,7 @@
       height: 8px;
       border-radius: 50%;
       background: var(--text-muted);
+      flex-shrink: 0;
     }
 
     /* Дополнительные телеметрические плашки */
@@ -496,7 +500,7 @@
     <!-- Главная круговая шкала -->
     <div class="gauge-card">
       <div class="gauge-wrapper">
-        <svg class="gauge-svg" viewBox="0 0 300 260">
+        <svg class="gauge-svg" viewBox="0 0 300 230">
           <defs>
             <linearGradient id="gaugeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#ff9900" />    <!-- Rich (10.0) -->
@@ -506,45 +510,47 @@
               <stop offset="100%" stop-color="#ff2244" />  <!-- Danger Lean (20.0) -->
             </linearGradient>
           </defs>
-          <!-- Фоновая дуга (угол от 140° до 400° -> 260 градусов) -->
-          <path class="gauge-track" d="M 55 210 A 110 110 0 1 1 245 210" />
+          <!-- Фоновая дуга (размах 270 градусов, R=100) -->
+          <path class="gauge-track" d="M 79 196 A 100 100 0 1 1 221 196" />
           <!-- Активная заполняющая дуга -->
-          <path id="gaugePath" class="gauge-progress" stroke="url(#gaugeGradient)" d="M 55 210 A 110 110 0 1 1 245 210" />
+          <path id="gaugePath" class="gauge-progress" stroke="url(#gaugeGradient)" d="M 79 196 A 100 100 0 1 1 221 196" />
           
-          <!-- Метки шкалы -->
+          <!-- Метки шкалы (расположены снаружи дуги, без наложений) -->
           <g class="gauge-ticks">
-            <text x="45" y="222">10</text>
-            <text x="32" y="145">12</text>
-            <text x="65" y="75">14</text>
-            <text x="150" y="44">14.7</text>
-            <text x="235" y="75">16</text>
-            <text x="268" y="145">18</text>
-            <text x="255" y="222">20</text>
+            <text x="55" y="206">10</text>
+            <text x="35" y="118">12</text>
+            <text x="75" y="48">14</text>
+            <text x="150" y="12">14.7</text>
+            <text x="225" y="48">16</text>
+            <text x="265" y="118">18</text>
+            <text x="245" y="206">20</text>
           </g>
         </svg>
 
         <div class="gauge-center-content">
           <div class="afr-value" id="valAfr">--.-</div>
           <div class="afr-unit">AFR (A/F)</div>
-          <div class="status-badge" id="badgeState">
-            <span class="status-dot" id="badgeDot"></span>
-            <span id="badgeText">ОЖИДАНИЕ</span>
-          </div>
         </div>
+      </div>
+
+      <!-- Статусный бейдж смеси - вынесен под циферблат -->
+      <div class="status-badge" id="badgeState">
+        <span class="status-dot" id="badgeDot"></span>
+        <span id="badgeText">ОЖИДАНИЕ</span>
       </div>
     </div>
 
     <!-- Информационные плитки -->
     <div class="telemetry-grid">
       <div class="telemetry-tile">
-        <div class="tile-label">Коэффициент Лямбда (λ)</div>
+        <div class="tile-label">Лямбда (λ)</div>
         <div class="tile-value" id="valLambda">-.--</div>
         <div class="tile-sub" id="subLambda">1.00 = Стехиометрия</div>
       </div>
       <div class="telemetry-tile">
-        <div class="tile-label">Входное напряжение</div>
+        <div class="tile-label">Сигнал ШЛЗ</div>
         <div class="tile-value" id="valVolts">-.-- В</div>
-        <div class="tile-sub" id="subVolts">0.0 - 5.0 В (LSU 4.9)</div>
+        <div class="tile-sub" id="subVolts">0.0 – 5.0 В (LSU 4.9)</div>
       </div>
     </div>
 
@@ -724,31 +730,48 @@
       }
     }
 
+    // Адаптивное масштабирование Canvas
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && (canvas.width !== Math.round(rect.width) || canvas.height !== Math.round(rect.height))) {
+        canvas.width = Math.round(rect.width);
+        canvas.height = Math.round(rect.height);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 50);
+
     // Отрисовка графика в реальном времени (Canvas)
     function renderChart() {
+      resizeCanvas();
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
 
-      // Сетка и линия 14.7
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.lineWidth = 1;
-
       // Горизонтальная линия стехиометрии 14.7
       // Диапазон шкалы: 10.0 (низ) до 20.0 (верх)
-      const stoichY = h - ((14.7 - 10.0) / 10.0) * h;
+      const stoichY = Math.round(h - ((14.7 - 10.0) / 10.0) * (h - 14) - 7);
+      
       ctx.beginPath();
       ctx.setLineDash([4, 4]);
       ctx.strokeStyle = "rgba(0, 255, 102, 0.35)";
-      ctx.moveTo(0, stoichY);
+      ctx.lineWidth = 1;
+      ctx.moveTo(38, stoichY);
       ctx.lineTo(w, stoichY);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Подпись 14.7
-      ctx.fillStyle = "rgba(0, 255, 102, 0.6)";
-      ctx.font = "9px sans-serif";
-      ctx.fillText("14.7", 4, stoichY - 3);
+      // Аккуратный бейдж 14.7 слева (без наложения линии)
+      ctx.fillStyle = "rgba(0, 35, 15, 0.85)";
+      ctx.fillRect(4, stoichY - 7, 30, 14);
+      ctx.strokeStyle = "rgba(0, 255, 102, 0.4)";
+      ctx.strokeRect(4, stoichY - 7, 30, 14);
+      ctx.fillStyle = "#00ff66";
+      ctx.font = "bold 9px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("14.7", 19, stoichY);
+      ctx.textAlign = "left";
 
       // Рисование линии AFR
       ctx.beginPath();
@@ -757,7 +780,7 @@
 
       for (let i = 0; i < MAX_POINTS; i++) {
         const val = Math.min(Math.max(historyData[i], 10.0), 20.0);
-        const y = h - ((val - 10.0) / 10.0) * (h - 10) - 5;
+        const y = h - ((val - 10.0) / 10.0) * (h - 14) - 7;
         const x = i * step;
 
         if (i === 0) ctx.moveTo(x, y);
